@@ -1,0 +1,39 @@
+
+a) m(long, long)
+b) m(string)
+c) m(long, ...)
+
+m("5")
+m(5)
+m((short)5, 5)
+m(5L, 5L, 3L)
+m(5L, 5L)
+
+
+1- m(H h)
+2- m(P p)
+
+
+m((H)(new H()))
+m(new P())
+
+
+Punto(X, Y)
+
+(1, 2)
+(0, 0)
+
+C
+
+P p = new H();
+p = new N();
+
+
+if(p instanceof N) {
+	((N)p).z();
+} else if(p instanceof H) {
+	H h = (H)p;
+	h.X();
+}
+
+C c = (C)p;
