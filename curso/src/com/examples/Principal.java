@@ -4,6 +4,9 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.examples.types.Days;
+import com.examples.types.Genero;
+
 /**
  * Demo del curso
  * 
@@ -91,7 +94,28 @@ public class Principal {
 		j = switch (i) { case 1, 3, 5 ->"Uno"; case 2, 4, 6 -> "Dos"; default -> "Muchos"; } + " Algo";
 		return 0b0110_1100_1001 | 0b011011001001;
 	}
+	public void tipos() {
+		Genero g = Genero.FEMENINO;
+		if(g == Genero.DESCONOCIDO) {
+			
+		}
+		
+		Days days = Days.MONDAY; // new Days(2)
+		days = Days.getEnum(3);
+		int i = days.getValue();
+	}
 
+	public int multihilo() {
+		int[] t = {1, 2, 3, 4, 5};
+		Integer rslt = 0;
+		synchronized (rslt) {
+			for(int i = 0; i < t.length; i++) {
+				rslt += t[i];
+			}
+			return rslt;
+		}
+	}
+	
 	public List name() {
 		return new ArrayList<String>();
 	}
