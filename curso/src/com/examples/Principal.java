@@ -15,6 +15,7 @@ import com.examples.types.Genero;
  *
  */
 public class Principal {
+	public static final String TIPO = "kk";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -37,7 +38,7 @@ public class Principal {
 		t[0] = new int[10];
 		t[1] = new int[2];
 		// t[0] = t[1];
-		// t[0].length
+		var kk = t[0].length;
 		t[0][0] = 4;
 		if (t[1][0] == 4) {
 			// ...
@@ -53,6 +54,9 @@ public class Principal {
 		boolean c = a = b;
 		if (t[1][1] == t[0][0] & a == b) {
 			// ...
+		}
+		if(!a) {
+			
 		}
 		String cmdSQL = "\tSelect *\n" + "\t from tabla\n" + "\t where 1=1";
 		cmdSQL = """
