@@ -6,6 +6,13 @@ import java.util.List;
 
 import com.examples.types.Days;
 import com.examples.types.Genero;
+import com.examples.entities.Asignatura;
+import com.examples.entities.Profesor;
+import com.examples.repositories.AlumnoRepositoryImp;
+import com.examples.repositories.AlumnoRepositoryMockImp;
+import com.examples.contracts.AlumnoRepository;
+import com.examples.contracts.Grafico;
+import com.examples.entities.Alumno;
 
 /**
  * Demo del curso
@@ -19,7 +26,40 @@ public class Principal {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		clases(1);
+		cambiaClases();
+		clases(2);
+		clases(1);
+//		interfaces();
+		System.gc();
+	}
+	
+	static void interfaces() {
+		Grafico[] lista = { new Alumno(1, "Pepito", "Grillo", null),
+				new Profesor(1, "Profe", "Grillo", null),
+				new Asignatura()
+		};
+		for(var g: lista)
+			g.Pintate();
+		
+		Object o;
+		o = new Profesor(1, "Profe", "Grillo", null);
+		o = new Principal();
+		
+		if(o instanceof Grafico) {
+			((Grafico)o).Pintate();
+		}
+	}
+	
+	static void clases(int id) {
+		AlumnoRepository dao = new AlumnoRepositoryMockImp();
+		Alumno item = dao.get(id);
+		System.out.println(item);
+		
+	}
+	static void cambiaClases() {
+		AlumnoRepository dao = new AlumnoRepositoryMockImp();
+		dao.modify(new Alumno(1, "PEPITO", "Grillo", null));
 	}
 
 	/**
