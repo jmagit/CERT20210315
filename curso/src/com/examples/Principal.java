@@ -1,11 +1,14 @@
 package com.examples;
 
+import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.examples.types.Days;
 import com.examples.types.Genero;
+import com.examples.utils.Autor;
 import com.examples.entities.Asignatura;
 import com.examples.entities.Profesor;
 import com.examples.repositories.AlumnoRepositoryImp;
@@ -23,17 +26,60 @@ import com.examples.entities.Alumno;
  */
 public class Principal {
 	public static final String TIPO = "kk";
+	
+	interface G1 extends Grafico {
+		default void Pintate() { System.out.println("Uno"); }
+	}
+
+	interface G2 extends Grafico {
+		default void Pintate() { System.out.println("Dos"); }
+	}
+
+	class Multiple implements G1, G2 {
+		@Override
+		public void Pintate() {
+			// TODO Auto-generated method stub
+			G1.super.Pintate();
+		}
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		clases(1);
-		cambiaClases();
-		clases(2);
-		clases(1);
-//		interfaces();
-		System.gc();
+//		clases(1);
+//		cambiaClases();
+//		clases(2);
+//		clases(1);
+////		interfaces();
+//		System.gc();
+//		afirmaciones();
+		anotaciones();
+	}
+	static void anotaciones() {
+		Class clase = Profesor.class;
+		var anotaciones = clase.getAnnotations();
+		System.out.println(Profesor.class.getAnnotation(Autor.class).nombre());
+
+		try {
+		clase = Class.forName("com.examples.entities.Persona");
+		var m = clase.getMethods();
+		var mp = clase.getDeclaredMethods();
+		var p = new Profesor(1, "Profe", "Grillo", null);
+		p.setFechaNacimiento(LocalDate.of(2020, 3, 18));
+		Method metodo;
+			metodo = p.getClass().getMethod("getEdad", null);
+			System.out.println(metodo.invoke(p));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
+	static void afirmaciones() {
+		var p = new Profesor(1, "Profe", "Grillo", null);
+//		p.setFechaNacimiento(null);
+		p.setFechaNacimiento(LocalDate.of(2021, 3, 18));
+	}
 	static void interfaces() {
 		Grafico[] lista = { new Alumno(1, "Pepito", "Grillo", null),
 				new Profesor(1, "Profe", "Grillo", null),
@@ -43,6 +89,18 @@ public class Principal {
 			g.Pintate();
 		
 		Object o;
+		var p = new Profesor(1, "Profe", "Grillo", null);
+		try {
+			var s = p.getNombre().toUpperCase();
+			s = p.getApellidos().get();
+			if(p.getApellidos().isPresent()) {
+				s = p.getApellidos().get();
+			}
+		} catch (CursoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		o = new Profesor(1, "Profe", "Grillo", null);
 		o = new Principal();
 		

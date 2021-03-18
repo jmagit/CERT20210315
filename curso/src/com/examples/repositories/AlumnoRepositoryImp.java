@@ -31,7 +31,7 @@ public class AlumnoRepositoryImp implements AlumnoRepository {
 	}
 	
 	@Override
-	public void add(Alumno item) {
+	public void add(Alumno item) throws CloneNotSupportedException {
 	}
 	
 	@Override

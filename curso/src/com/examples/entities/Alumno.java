@@ -2,6 +2,8 @@ package com.examples.entities;
 
 import java.time.LocalDate;
 
+import com.examples.CursoException;
+
 public class Alumno extends Persona {
 	Asignatura[] asignaturas;
 	
@@ -27,8 +29,14 @@ public class Alumno extends Persona {
 	@Override
 	public String toString() {
 		// super.toString();
-		return "Alumno [Id=" + getId() + ", Nombre=" + getNombre() + " " + getApellidos()
-				+ "]";
+		try {
+			return "Alumno [Id=" + getId() + ", Nombre=" + (hayNombre() ? getNombre() : "") + " " + getApellidos()
+					+ "]";
+		} catch (CursoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 	@Override
 	public void Pintate() {

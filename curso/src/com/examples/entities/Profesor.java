@@ -2,6 +2,10 @@ package com.examples.entities;
 
 import java.time.LocalDate;
 
+import com.examples.CursoException;
+import com.examples.utils.Autor;
+
+@Autor(nombre = "Yo mismo")
 public class Profesor extends Persona {
 
 	public Profesor(int id, String nombre, String apellidos, LocalDate fechaNacimiento) {
@@ -23,9 +27,14 @@ public class Profesor extends Persona {
 	}
 	@Override
 	public String toString() {
-		// super.toString();
-		return "Profesor [Id=" + getId() + ", Nombre=" + getNombre() + " " + getApellidos()
-				+ "]";
+		try {
+			return "Profesor [Id=" + getId() + ", Nombre=" + (hayNombre() ? getNombre() : "") + " " + getApellidos()
+					+ "]";
+		} catch (CursoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 	@Override
 	public void Pintate() {

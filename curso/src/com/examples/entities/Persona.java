@@ -1,9 +1,11 @@
 package com.examples.entities;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.naming.OperationNotSupportedException;
 
+import com.examples.CursoException;
 import com.examples.Validaciones;
 import com.examples.contracts.Grafico;
 
@@ -35,10 +37,18 @@ public abstract class Persona implements Grafico {
 		this.id = id;
 	}
 
-	public String getNombre() {
+	public boolean hayNombre(){
+		return nombre != null;
+	}
+	public String getNombre() throws CursoException {
+		if(nombre == null)
+			throw new CursoException("No hay nombre");
 		return nombre;
 	}
 
+	public void setNombre() {
+		this.nombre = null;
+	}
 	public void setNombre(String nombre) {
 		if(this.nombre == nombre) return;
 		if(Validaciones.estaVacio(nombre)) {
@@ -47,8 +57,10 @@ public abstract class Persona implements Grafico {
 		this.nombre = nombre;
 	}
 
-	public String getApellidos() {
-		return apellidos;
+	public Optional<String> getApellidos() {
+		if(apellidos == null) 
+			return Optional.empty();
+		return Optional.of(apellidos);
 	}
 
 	public void setApellidos(String apellidos) {
@@ -59,10 +71,14 @@ public abstract class Persona implements Grafico {
 		return fechaNacimiento;
 	}
 
+	//@Deprecated
 	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		assert fechaNacimiento != null : "Fecha a nulo";
+//		assert fechaNacimiento.isBefore(LocalDate.now()) : "Fecha posterior";
 		this.fechaNacimiento = fechaNacimiento;
 		edad = LocalDate.now().getYear() - fechaNacimiento.getYear() - 
 				(LocalDate.now().getDayOfYear() < fechaNacimiento.getDayOfYear() ? 1 : 0);
+		assert edad >= 0 : "Edad negativa";
 	}
 	
 	public int getEdad() throws OperationNotSupportedException {
@@ -71,6 +87,8 @@ public abstract class Persona implements Grafico {
 		return LocalDate.now().getYear() - fechaNacimiento.getYear() - 
 				(LocalDate.now().getDayOfYear() < fechaNacimiento.getDayOfYear() ? 1 : 0);
 	}
+	
+	private void privado() {}
 	
 	public abstract void comer();
 }

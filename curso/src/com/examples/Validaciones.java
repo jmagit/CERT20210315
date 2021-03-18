@@ -1,5 +1,8 @@
 package com.examples;
 
+import com.examples.utils.Autor;
+
+@Autor(nombre = "Otro", apellidos = {"ejemplo", "de" , "anotacion" } )
 public interface Validaciones {
 	static boolean estaVacio(String cad) {
 		return cad == null || "".equals(cad);

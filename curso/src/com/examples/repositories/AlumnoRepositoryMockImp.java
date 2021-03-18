@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.examples.CursoException;
 import com.examples.contracts.AlumnoRepository;
 import com.examples.entities.Alumno;
 
@@ -37,8 +38,14 @@ public class AlumnoRepositoryMockImp implements AlumnoRepository {
 	}
 	
 	@Override
-	public void add(Alumno item) {
-		listaAlumnos.put(item.getId(), item);
+	public void add(Alumno item) throws CursoException {
+		if(item == null)
+			throw new CursoException("El elemento no puede estar a nulo");
+		try {
+			listaAlumnos.put(item.getId(), item);
+		} catch (Exception e) {
+			throw new CursoException("Error al guardar", e);
+		}
 	}
 	
 	@Override
@@ -62,4 +69,15 @@ public class AlumnoRepositoryMockImp implements AlumnoRepository {
 		// TODO Auto-generated method stub
 		super.finalize();
 	}
+	
+//	@Override
+//	protected Object clone() {
+//		try {
+//			super.clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return super.clone();
+//	}
 }
