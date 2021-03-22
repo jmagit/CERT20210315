@@ -5,11 +5,16 @@ import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.examples.types.Days;
 import com.examples.types.Genero;
 import com.examples.utils.Autor;
 import com.examples.entities.Asignatura;
+import com.examples.entities.Elemento;
+import com.examples.entities.Factura;
+import com.examples.entities.Persona;
 import com.examples.entities.Profesor;
 import com.examples.repositories.AlumnoRepositoryImp;
 import com.examples.repositories.AlumnoRepositoryMockImp;
@@ -52,7 +57,15 @@ public class Principal {
 ////		interfaces();
 //		System.gc();
 //		afirmaciones();
-		anotaciones();
+//		anotaciones();
+		anidar();
+	}
+	static void anidar() {
+		Factura factura = new Factura();
+		var dirF = new Factura.DireccionFactura();
+		// var linea = new factura.Linea();
+		
+	
 	}
 	static void anotaciones() {
 		Class clase = Profesor.class;
@@ -75,6 +88,21 @@ public class Principal {
 		
 	}
 	
+	static void geneticos() {
+		Elemento<Integer> provincia = new Elemento<Integer>(2, "Barcelona") ;
+		provincia.setKey(1);
+		Elemento<Character> genero = new Elemento<Character>('F', "Femenino") ;
+		genero.setKey('k');
+		if(genero instanceof Elemento) {
+			var e = provincia;
+		}
+		kk(Elemento.class);
+		
+	}
+	static <U> U kk(Class clase) {
+//		clase.getConstructors()[0].newInstance(null)
+		return null;
+	}
 	static void afirmaciones() {
 		var p = new Profesor(1, "Profe", "Grillo", null);
 //		p.setFechaNacimiento(null);
@@ -115,9 +143,27 @@ public class Principal {
 		System.out.println(item);
 		
 	}
-	static void cambiaClases() {
+	static void cambiaClases() throws Exception {
 		AlumnoRepository dao = new AlumnoRepositoryMockImp();
 		dao.modify(new Alumno(1, "PEPITO", "Grillo", null));
+		((AlumnoRepositoryMockImp)dao).filter(new Function<Alumno, Boolean>() {
+			@Override
+			public Boolean apply(Alumno t) {
+				return t.getApellidos().isPresent() && t.getApellidos().get().startsWith("A");
+			}
+		});
+		((AlumnoRepositoryMockImp)dao).filter(t -> t.getApellidos().isPresent() && t.getApellidos().get().startsWith("A"));
+		
+		((AlumnoRepositoryMockImp)dao).filter(item -> {
+			try {
+				return item.getNombre().endsWith("o");
+			} catch (CursoException e) {
+				return false;
+			}
+		});
+		Predicate<Alumno> fn = item -> item instanceof Alumno;
+		fn.test(dao.get(0));
+		
 	}
 
 	/**

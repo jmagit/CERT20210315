@@ -3,11 +3,14 @@ package com.examples.repositories;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.examples.CursoException;
 import com.examples.contracts.AlumnoRepository;
 import com.examples.entities.Alumno;
+import com.sun.net.httpserver.Filter;
 
 //import com.examples.entities.Alumno;
 
@@ -35,6 +38,14 @@ public class AlumnoRepositoryMockImp implements AlumnoRepository {
 	public Alumno get(int id) {
 		// leer db
 		return listaAlumnos.get(id);
+	}
+	
+	public Collection<Alumno> filter(Function<Alumno, Boolean> where) {
+		List<Alumno> rslt = new ArrayList<Alumno>();
+		for(var item: listaAlumnos.values()) 
+			if(where.apply(item))
+				rslt.add(item);
+		return rslt;
 	}
 	
 	@Override
