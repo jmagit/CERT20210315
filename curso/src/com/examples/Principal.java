@@ -4,7 +4,10 @@ import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -31,13 +34,17 @@ import com.examples.entities.Alumno;
  */
 public class Principal {
 	public static final String TIPO = "kk";
-	
+
 	interface G1 extends Grafico {
-		default void Pintate() { System.out.println("Uno"); }
+		default void Pintate() {
+			System.out.println("Uno");
+		}
 	}
 
 	interface G2 extends Grafico {
-		default void Pintate() { System.out.println("Dos"); }
+		default void Pintate() {
+			System.out.println("Dos");
+		}
 	}
 
 	class Multiple implements G1, G2 {
@@ -58,116 +65,138 @@ public class Principal {
 //		System.gc();
 //		afirmaciones();
 //		anotaciones();
-		anidar();
+		compara();
 	}
+
+	interface MiComparator<T> extends BiFunction<T, T, Integer> {
+		
+	}
+	static void compara() {
+		Factura f1 = new Factura();
+		f1.SetNumFactura(111);
+		Factura f2 = new Factura();
+		f2.SetNumFactura(111);
+		System.out.println("Son iguales:" + (f1 == f2 ? "SI" : "NO"));
+		System.out.println("Son iguales:" + (f1.equals(f2) ? "SI" : "NO"));
+		System.out.println("Son iguales:" + (f1.hashCode() == f2.hashCode() ? "SI" : "NO"));
+		System.out.println("Son iguales:" + (f1.compareTo(f2) == 0 ? "SI" : "NO"));
+		BiFunction<Factura, Factura, Integer> fn = (a, b) -> a.compareTo(b);
+		Comparator<Factura> comparator = (a, b) -> a.compareTo(b);
+		List<Factura> lst = new ArrayList<Factura>();
+		lst.sort(comparator);
+	}
+
 	static void anidar() {
 		Factura factura = new Factura();
 		var dirF = new Factura.DireccionFactura();
 		Object o = factura.clone();
 		o = 4; // new Integer(4)
-		int i = (int)o; // o.get()
+		int i = (int) o; // o.get()
 		var s = "X";
-		for(i=0; i < 100; i++) {
+		for (i = 0; i < 100; i++) {
 			s += "X";
 		}
 		StringBuilder sb = new StringBuilder("X");
-		for(i=0; i < 100; i++) {
+		for (i = 0; i < 100; i++) {
 			sb.append("X");
 		}
 		s = sb.toString();
-		
+
 		// var linea = new factura.Linea();
-		
-	
+
 	}
+
 	static void anotaciones() {
 		Class clase = Profesor.class;
 		var anotaciones = clase.getAnnotations();
 		System.out.println(Profesor.class.getAnnotation(Autor.class).nombre());
 
 		try {
-		clase = Class.forName("com.examples.entities.Persona");
-		var m = clase.getMethods();
-		var mp = clase.getDeclaredMethods();
-		var p = new Profesor(1, "Profe", "Grillo", null);
-		p.setFechaNacimiento(LocalDate.of(2020, 3, 18));
-		Method metodo;
+			clase = Class.forName("com.examples.entities.Persona");
+			var m = clase.getMethods();
+			var mp = clase.getDeclaredMethods();
+			var p = new Profesor(1, "Profe", "Grillo", null);
+			p.setFechaNacimiento(LocalDate.of(2020, 3, 18));
+			Method metodo;
 			metodo = p.getClass().getMethod("getEdad", null);
 			System.out.println(metodo.invoke(p));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	static void geneticos() {
-		Elemento<Integer> provincia = new Elemento<Integer>(2, "Barcelona") ;
+		Elemento<Integer> provincia = new Elemento<Integer>(2, "Barcelona");
 		provincia.setKey(1);
-		Elemento<Character> genero = new Elemento<Character>('F', "Femenino") ;
+		Elemento<Character> genero = new Elemento<Character>('F', "Femenino");
 		genero.setKey('k');
-		if(genero instanceof Elemento) {
+		if (genero instanceof Elemento) {
 			var e = provincia;
 		}
 		kk(Elemento.class);
-		
+
 	}
+
 	static <U> U kk(Class clase) {
 //		clase.getConstructors()[0].newInstance(null)
 		return null;
 	}
+
 	static void afirmaciones() {
 		var p = new Profesor(1, "Profe", "Grillo", null);
 //		p.setFechaNacimiento(null);
 		p.setFechaNacimiento(LocalDate.of(2021, 3, 18));
 	}
+
 	static void interfaces() {
-		Grafico[] lista = { new Alumno(1, "Pepito", "Grillo", null),
-				new Profesor(1, "Profe", "Grillo", null),
-				new Asignatura()
-		};
-		for(var g: lista)
+		Grafico[] lista = { new Alumno(1, "Pepito", "Grillo", null), new Profesor(1, "Profe", "Grillo", null),
+				new Asignatura() };
+		for (var g : lista)
 			g.Pintate();
-		
+
 		Object o;
 		var p = new Profesor(1, "Profe", "Grillo", null);
 		try {
 			var s = p.getNombre().toUpperCase();
 			s = p.getApellidos().get();
-			if(p.getApellidos().isPresent()) {
+			if (p.getApellidos().isPresent()) {
 				s = p.getApellidos().get();
 			}
 		} catch (CursoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		o = new Profesor(1, "Profe", "Grillo", null);
 		o = new Principal();
-		
-		if(o instanceof Grafico) {
-			((Grafico)o).Pintate();
+
+		if (o instanceof Grafico) {
+			((Grafico) o).Pintate();
 		}
 	}
-	
+
 	static void clases(int id) {
 		AlumnoRepository dao = new AlumnoRepositoryMockImp();
 		Alumno item = dao.get(id);
 		System.out.println(item);
-		
+
 	}
+
 	static void cambiaClases() throws Exception {
 		AlumnoRepository dao = new AlumnoRepositoryMockImp();
 		dao.modify(new Alumno(1, "PEPITO", "Grillo", null));
-		((AlumnoRepositoryMockImp)dao).filter(new Function<Alumno, Boolean>() {
+		((AlumnoRepositoryMockImp) dao).filter(new Function<Alumno, Boolean>() {
 			@Override
 			public Boolean apply(Alumno t) {
 				return t.getApellidos().isPresent() && t.getApellidos().get().startsWith("A");
 			}
 		});
-		((AlumnoRepositoryMockImp)dao).filter(t -> t.getApellidos().isPresent() && t.getApellidos().get().startsWith("A"));
-		
-		((AlumnoRepositoryMockImp)dao).filter(item -> {
+		((AlumnoRepositoryMockImp) dao)
+				.filter(t -> t.getApellidos().isPresent() && t.getApellidos().get().startsWith("A"));
+
+		((AlumnoRepositoryMockImp) dao).filter(item -> {
 			try {
 				return item.getNombre().endsWith("o");
 			} catch (CursoException e) {
@@ -176,7 +205,7 @@ public class Principal {
 		});
 		Predicate<Alumno> fn = item -> item instanceof Alumno;
 		fn.test(dao.get(0));
-		
+
 	}
 
 	/**
@@ -212,8 +241,8 @@ public class Principal {
 		if (t[1][1] == t[0][0] & a == b) {
 			// ...
 		}
-		if(!a) {
-			
+		if (!a) {
+
 		}
 		String cmdSQL = "\tSelect *\n" + "\t from tabla\n" + "\t where 1=1";
 		cmdSQL = """
@@ -243,7 +272,7 @@ public class Principal {
 			// ...
 			break;
 		}
-		
+
 		var j = switch (i) {
 		case 1, 3, 5:
 			yield "Uno";
@@ -252,31 +281,36 @@ public class Principal {
 		default:
 			yield "Muchos";
 		} + " Algo";
-		j = switch (i) { case 1, 3, 5 ->"Uno"; case 2, 4, 6 -> "Dos"; default -> "Muchos"; } + " Algo";
+		j = switch (i) {
+		case 1, 3, 5 -> "Uno";
+		case 2, 4, 6 -> "Dos";
+		default -> "Muchos";
+		} + " Algo";
 		return 0b0110_1100_1001 | 0b011011001001;
 	}
+
 	public void tipos() {
 		Genero g = Genero.FEMENINO;
-		if(g == Genero.DESCONOCIDO) {
-			
+		if (g == Genero.DESCONOCIDO) {
+
 		}
-		
+
 		Days days = Days.MONDAY; // new Days(2)
 		days = Days.getEnum(3);
 		int i = days.getValue();
 	}
 
 	public int multihilo() {
-		int[] t = {1, 2, 3, 4, 5};
+		int[] t = { 1, 2, 3, 4, 5 };
 		Integer rslt = 0;
 		synchronized (rslt) {
-			for(int i = 0; i < t.length; i++) {
+			for (int i = 0; i < t.length; i++) {
 				rslt += t[i];
 			}
 			return rslt;
 		}
 	}
-	
+
 	public List name() {
 		return new ArrayList<String>();
 	}
