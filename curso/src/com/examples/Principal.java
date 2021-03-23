@@ -63,6 +63,19 @@ public class Principal {
 	static void anidar() {
 		Factura factura = new Factura();
 		var dirF = new Factura.DireccionFactura();
+		Object o = factura.clone();
+		o = 4; // new Integer(4)
+		int i = (int)o; // o.get()
+		var s = "X";
+		for(i=0; i < 100; i++) {
+			s += "X";
+		}
+		StringBuilder sb = new StringBuilder("X");
+		for(i=0; i < 100; i++) {
+			sb.append("X");
+		}
+		s = sb.toString();
+		
 		// var linea = new factura.Linea();
 		
 	

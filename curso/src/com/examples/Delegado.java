@@ -63,6 +63,7 @@ public class Delegado {
 				return ii * a.toLowerCase().compareTo(b.toLowerCase());
 			}
 		};
+		fn.compara(null, null);
 	}
 	public int unCompara(String a, String b) {
 		return a.toLowerCase().compareTo(b.toLowerCase());
