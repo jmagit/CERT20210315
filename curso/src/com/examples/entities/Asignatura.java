@@ -2,7 +2,7 @@ package com.examples.entities;
 
 import com.examples.contracts.Grafico;
 
-public final class Asignatura implements Grafico {
+ final class Asignatura implements Grafico {
 
 	public Asignatura() {
 		// TODO Auto-generated constructor stub

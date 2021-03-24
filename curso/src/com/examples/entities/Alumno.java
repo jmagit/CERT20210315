@@ -44,5 +44,10 @@ public class Alumno extends Persona {
 		
 	}
 	
-	
+	public Asignatura getAsignatura() {
+		return asignaturas[0];
+	}
+	public void addAsignatura(int index, Asignatura asignatura) {
+		asignaturas[index] = asignatura;
+	}
 }

@@ -7,9 +7,18 @@ import com.examples.utils.Autor;
 
 @Autor(nombre = "Yo mismo")
 public class Profesor extends Persona {
-
+	private double salario;
 	public Profesor(int id, String nombre, String apellidos, LocalDate fechaNacimiento) {
 		super(id, nombre, apellidos, fechaNacimiento);
+		salario = nombre.hashCode() % 10000;
+	}
+
+	public double getSalario() {
+		return salario;
+	}
+
+	public void setSalario(double salario) {
+		this.salario = salario;
 	}
 
 	public Profesor(int id, String nombre, String apellidos) {
