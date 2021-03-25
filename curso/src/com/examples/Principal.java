@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -69,82 +73,134 @@ public class Principal {
 //		System.gc();
 //		afirmaciones();
 //		anotaciones();
-		consultas();
+		concurrencia1();
+		System.out.println("Fin");
+	}
+
+	static volatile int cont = 0;
+	static void concurrencia1() {
+			ExecutorService servicio= Executors.newFixedThreadPool(5);
+		try {
+			Future<Integer> resultado= servicio.submit(() -> {
+				int rslt = 1;
+				for(var i = 1; i <= 10; i++) {
+					System.out.println("Hilo 1 Iteración: " + i + " " + cont);
+					rslt *= i;
+					if(i % 6 == 0)
+						throw new IndexOutOfBoundsException("Error");
+//					cont++;
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				return rslt;
+			});
+			System.out.println(resultado.get());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.getCause().printStackTrace();
+			System.out.println("Esta si la controlo");
+		} finally { 
+		 	servicio.shutdown();
+		}
+
+	}
+
+	static void concurrencia() {
+		var h1 = new Thread(() -> {
+			for(var i = 1; i <= 10; i++) {
+				System.out.println("Hilo 1 Iteración: " + i + " " + cont);
+				if(i % 6 == 0)
+					throw new IndexOutOfBoundsException("Error");
+				cont++;
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		var h2 = new Thread(() -> {
+			for(var i = 0; i < 5; i++) {
+				System.out.println("Hilo 2 Iteración: " + i + " " + cont);
+				cont++;
+				try {
+					Thread.sleep(788);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		try {
+			h1.start();
+			h2.start();
+		} catch (Exception e2) {
+			System.out.println("Error");
+		}
 	}
 
 	static void consultas() {
-		List<Persona> lista = List.of( 
-					new Alumno(1, "Pepito", "Grillo", LocalDate.of(2000, 10, 10)), 
-					new Profesor(2, "Profe", "Grillo", LocalDate.of(2002, 6, 1)),
-					new Profesor(3, "Otro", "Profe", LocalDate.of(1985, 1, 1)),
-					new Alumno(4, "Pedro", "Pica Piedra", LocalDate.of(2003, 7, 30)), 
-					new Alumno(5, "Pablo", "Marmol", LocalDate.of(2000, 2, 28)));
+		List<Persona> lista = List.of(new Alumno(1, "Pepito", "Grillo", LocalDate.of(2000, 10, 10)),
+				new Profesor(2, "Profe", "Grillo", LocalDate.of(2002, 6, 1)),
+				new Profesor(3, "Otro", "Profe", LocalDate.of(1985, 1, 1)),
+				new Alumno(4, "Pedro", "Pica Piedra", LocalDate.of(2003, 7, 30)),
+				new Alumno(5, "Pablo", "Marmol", LocalDate.of(2000, 2, 28)));
 
-		lista.stream()
-			.filter(item -> item instanceof Profesor)
-			.map(item -> (Profesor)item)
-			.forEach(item -> System.out.println(item.getSalario()));
-		lista.stream()
-			.filter(item -> item instanceof Profesor)
-			.peek(System.out::println)
-			.map(item -> (Profesor)item)
-			.forEach(item -> item.setSalario(item.getSalario() * 1.1));
+		lista.stream().filter(item -> item instanceof Profesor).map(item -> (Profesor) item)
+				.forEach(item -> System.out.println(item.getSalario()));
+		lista.stream().filter(item -> item instanceof Profesor).peek(System.out::println).map(item -> (Profesor) item)
+				.forEach(item -> item.setSalario(item.getSalario() * 1.1));
 //		lista.stream()
 //			.filter(item -> item instanceof Profesor)
 //			.map(item -> (Profesor)item)
 //			.peek(item -> item.setSalario(item.getSalario() * 1.1))
 //			.map(item -> item.getSalario())
 //			.forEach(item -> System.out.println(item));
-		lista.stream()
-			.filter(item -> item instanceof Profesor)
-			.map(item -> (Profesor)item)
-			.forEach(item -> System.out.println(item.getSalario()));
-		lista.stream()
-			.forEach(item -> {
-				try {
-					System.out.println(item.getEdad());
-				} catch (OperationNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			});
-		System.out.println(lista.stream()
-			.filter(item -> {
-				try {
-					return item.getEdad() >= 18;
-				} catch (OperationNotSupportedException e) {
-					// TODO Auto-generated catch block
-					return false;
-				}
-			})
-			.map(item -> {				try {
+		lista.stream().filter(item -> item instanceof Profesor).map(item -> (Profesor) item)
+				.forEach(item -> System.out.println(item.getSalario()));
+		lista.stream().forEach(item -> {
+			try {
+				System.out.println(item.getEdad());
+			} catch (OperationNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		System.out.println(lista.stream().filter(item -> {
+			try {
+				return item.getEdad() >= 18;
+			} catch (OperationNotSupportedException e) {
+				// TODO Auto-generated catch block
+				return false;
+			}
+		}).map(item -> {
+			try {
 				return item.getEdad();
 			} catch (OperationNotSupportedException e) {
 				// TODO Auto-generated catch block
 				return 0;
-			}})
-			.distinct()
-			.count()
-			);
+			}
+		}).distinct().count());
 		try {
-			System.out.println(lista.stream()
-				.filter(item -> item instanceof Profesor)
-				.map(item -> (Profesor)item)
-				.max((a,b) -> (int)(a.getSalario() - b.getSalario()))
-				.get()
-				.getNombre()
-			);
+			System.out.println(lista.stream().filter(item -> item instanceof Profesor).map(item -> (Profesor) item)
+					.max((a, b) -> (int) (a.getSalario() - b.getSalario())).get().getNombre());
 		} catch (CursoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			//.forEach(System.out::println);
-		
+		// .forEach(System.out::println);
+
 		boolean soloAlumnos = false, paginado = false, mayores = false;
 		int pag = 0, rows = 2;
-		
+
 		var query = dameConsulta(lista, soloAlumnos, paginado, mayores, pag, rows, null);
-		
+
 		query.forEach(System.out::println);
 		System.out.println();
 		query = dameConsulta(lista, true, true, mayores, pag, rows, (a, b) -> b.getId() - a.getId());
@@ -152,7 +208,7 @@ public class Principal {
 		System.out.println();
 		query = dameConsulta(lista, true, true, mayores, 1, rows, (a, b) -> a.getId() - b.getId());
 		query.forEach(System.out::println);
-		
+
 		query = dameConsulta(lista, true, paginado, true, pag, rows, null);
 //		var p = query.findFirst();
 //		System.out.println();
@@ -161,44 +217,40 @@ public class Principal {
 		System.out.println();
 		var l = query.collect(Collectors.toList());
 		l.forEach(item -> System.out.println(item));
-		System.out.println(lista.stream()
-				.filter(item -> {
-					try {
-						return item.getEdad() < 18;
-					} catch (OperationNotSupportedException e) {
-						// TODO Auto-generated catch block
-						return false;
-					}
-				})
-				.count() > 0
-				);
-		System.out.println(lista.stream()
-				.allMatch(item -> {
-					try {
-						return item.getEdad() >= 18;
-					} catch (OperationNotSupportedException e) {
-						// TODO Auto-generated catch block
-						return false;
-					}
-				})
-				);
+		System.out.println(lista.stream().filter(item -> {
+			try {
+				return item.getEdad() < 18;
+			} catch (OperationNotSupportedException e) {
+				// TODO Auto-generated catch block
+				return false;
+			}
+		}).count() > 0);
+		System.out.println(lista.stream().allMatch(item -> {
+			try {
+				return item.getEdad() >= 18;
+			} catch (OperationNotSupportedException e) {
+				// TODO Auto-generated catch block
+				return false;
+			}
+		}));
 
 		/*
-		List<Integer> listOfIntegers = List.of(1, 5, 6, 7, 2, 3, 4, 8, 9);
-		System.out.println("Sequential Stream: ");
-		listOfIntegers.stream().map(item-> item * 2).sorted().forEach(e -> System.out.print(e + " "));
-		System.out.println("\nParallel Stream: ");
-		listOfIntegers.stream().parallel().map(item-> item * 2).sequential().sorted().forEach(e -> System.out.print(e + " "));
+		 * List<Integer> listOfIntegers = List.of(1, 5, 6, 7, 2, 3, 4, 8, 9);
+		 * System.out.println("Sequential Stream: "); listOfIntegers.stream().map(item->
+		 * item * 2).sorted().forEach(e -> System.out.print(e + " "));
+		 * System.out.println("\nParallel Stream: ");
+		 * listOfIntegers.stream().parallel().map(item-> item *
+		 * 2).sequential().sorted().forEach(e -> System.out.print(e + " "));
 		 */
 	}
 
 	private static Stream<Persona> dameConsulta(List<Persona> lista, boolean soloAlumnos, boolean paginado,
 			boolean mayores, int pag, int rows, Comparator<Persona> comp) {
 		var query = lista.stream();
-		if(soloAlumnos) {
+		if (soloAlumnos) {
 			query = query.filter(item -> item instanceof Alumno);
 		}
-		if(mayores) {
+		if (mayores) {
 			query = query.filter(item -> {
 				try {
 					return item.getEdad() >= 18;
@@ -208,18 +260,16 @@ public class Principal {
 				}
 			});
 		}
-		if(paginado) {
-			query = query.sorted(comp)
-					.skip(pag * rows)
-					.limit(rows);
+		if (paginado) {
+			query = query.sorted(comp).skip(pag * rows).limit(rows);
 		}
 		return query;
 	}
 
-		
 	interface MiComparator<T> extends BiFunction<T, T, Integer> {
-		
+
 	}
+
 	static void compara() {
 		Factura f1 = new Factura();
 		f1.SetNumFactura(111);
@@ -301,8 +351,9 @@ public class Principal {
 
 	static void interfaces() {
 		Grafico[] lista = { new Alumno(1, "Pepito", "Grillo", null), new Profesor(1, "Profe", "Grillo", null)
-				/*,
-				new Asignatura()*/ };
+				/*
+				 * , new Asignatura()
+				 */ };
 		for (var g : lista)
 			g.Pintate();
 		var a = new Alumno(1, "Pepito", "Grillo", null);

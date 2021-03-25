@@ -2,7 +2,7 @@ package com.examples.entities;
 
 import java.time.LocalDate;
 
-import com.examples.CursoException;
+import com.examples.exception.CursoException;
 import com.examples.utils.Autor;
 import static java.lang.Math.abs;
 
