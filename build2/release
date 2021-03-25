@@ -1,2 +1,0 @@
-JAVA_VERSION="15.0.1"
-MODULES="java.base com.examples.utils com.examples.domains com.examples.contracts com.examples.infraestructure com.examples.domains.services java.logging java.transaction.xa java.xml java.sql com.examples.main"
